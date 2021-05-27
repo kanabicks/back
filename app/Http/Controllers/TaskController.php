@@ -17,15 +17,26 @@ class TaskController extends Controller
         //
     }
 
+    public function authenticate(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            return redirect()->intended('dashboard');
+        }
+
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+    }    
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
+   
 
     /**
      * Store a newly created resource in storage.
@@ -89,4 +100,16 @@ class TaskController extends Controller
         return response()->json($main_table);
     }
 
+    public function create(Request $request)
+    {
+        $request->user()->tasks()->create([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'done' => false
+        ]);
+
+        return response()->json(['status' => 'ok']);
+    }
+
 }
+
