@@ -36,6 +36,13 @@ Route::any('/auth', function (Request $request) {
     return $user->createToken($request->device_name)->plainTextToken;
 });
 
+Route::get('/get_all', [TaskController::class, 'get_all']);
+Route::get('/team/{id}', [TaskController::class, 'get_team']);
+Route::get('/delete_team/{id}', [TaskController::class, 'delete_team']);
+Route::get('/delete_member/{id1}/{id2}', [TaskController::class, 'delete_member']);
+Route::post('/add_team', [TaskController::class, 'add_team']);
+Route::post('/add_user/$id', [TaskController::class, 'add_member']);
+
 
 Route::any("add",[TaskController::class, 'add']);
 Route::any('/create', 'App\Http\Controllers\TaskController@create');
